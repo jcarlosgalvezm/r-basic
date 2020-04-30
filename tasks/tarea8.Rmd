@@ -1,0 +1,39 @@
+---
+title: "Tarea8"
+author: "Carlos Gálvez"
+date: "4/29/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(RCurl)
+library(dplyr)
+```
+
+```{r echo=FALSE}
+medals = read.csv(text = getURL("http://winterolympicsmedals.com/medals.csv"))
+```
+
+```{r}
+dim(medals)[1]
+```
+
+```{r}
+dim(subset(medals, Medal == "Gold"))[1]
+dim(subset(medals, Medal == "Silver"))[1]
+dim(subset(medals, Medal == "Bronze"))[1]
+```
+
+```{r}
+dim(distinct(select(medals, City)))[1]
+```
+
+```{r}
+arrange(aggregate(medals$Year, by=list(medals$Year), FUN=length), desc(x))[1,][1]
+```
+
+```{r}
+NOC_between_1960_1996 = filter(select(medals, NOC), medals$Year >= 1960 & medals$Year <= 1996)
+arrange(aggregate(NOC_between_1960_1996, by=list(NOC_between_1960_1996$NOC), FUN=length), desc(NOC))[1,][1]
+```
