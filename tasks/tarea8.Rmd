@@ -16,17 +16,17 @@ medals = read.csv(text = getURL("http://winterolympicsmedals.com/medals.csv"))
 ```
 
 ```{r}
-dim(medals)[1]
+nrow(medals)
 ```
 
 ```{r}
-dim(subset(medals, Medal == "Gold"))[1]
-dim(subset(medals, Medal == "Silver"))[1]
-dim(subset(medals, Medal == "Bronze"))[1]
+nrow(subset(medals, Medal == "Gold"))
+nrow(subset(medals, Medal == "Silver"))
+nrow(subset(medals, Medal == "Bronze"))
 ```
 
 ```{r}
-dim(distinct(select(medals, City)))[1]
+nrow(distinct(select(medals, City)))
 ```
 
 ```{r}

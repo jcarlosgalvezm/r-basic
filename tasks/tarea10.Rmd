@@ -1,0 +1,92 @@
+---
+title: "Tarea10"
+author: "Carlos Gálvez"
+date: "5/1/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(MASS)
+```
+
+1. Utiliza str() y head() para explorar la estructura, y con help(), mirar el significado de cada variable.
+```{r}
+str(birthwt)
+head(birthwt)
+help(birthwt)
+```
+2. Calcula una tabla de frecuencias relativas marginales de los pares (raza de la madre, peso inferior a 2.5 kg o no) que permita ver si la raza de la madre influye en el peso del bebé.
+```{r}
+low_by_race = table(birthwt[c("low","race")])
+dimnames(low_by_race) = list(
+  low = c("No", "Yes"),
+  race = c("white", "black", "other")
+)
+low_by_race_rel_margin1 = prop.table(low_by_race, margin=1)
+```
+
+3. Dibuja un diagrama de mosaico de la tabla del ejercicio anterior.
+```{r}
+mosaicplot(low_by_race_rel_margin1, main = "Low weigth by race")
+```
+4. Dibuja un diagrama bidimensional de barras, con las barras organizadas en bloques, que permita visualizar la información de los ejercicios anteriores. Aprovecha para nombres adecuados a los bloques, colores a las barras, y añadir una leyenda que explique qué representa cada barra.
+```{r}
+barplot(low_by_race_rel_margin1, col=c("red","lightblue"), beside=TRUE, legend.text=c(">= 2.5 kg","< 2.5 kg"), main="Low weigth by race")
+```
+5. ¿Se puede obtener alguna conclusión de la tabla y el diagrama de barras anterior? Argumenta tu respuesta
+*Observando la gráfica extraemos que para las raza blanca la mayoria de bebes nacen con un peso superior a los 2.5kg, sin embargo para el resto de razas la mayoria de bebes nacen con un peso inferior, de manera que podemos concluir que la raza si influye en el peso de nacimiento de los bebes*
+
+6. Repite los cuatro ejercicios anteriores para los pares (madre fumadora o no, peso inferior a 2.5 kg o no) y para los pares (madre hipertensa o no, peso inferior a 2.5 kg o no.
+
+### Madres Fumadoras
+```{r}
+low_by_smoker = table(birthwt[c("low","smoke")])
+dimnames(low_by_smoker) = list(
+  low = c("No", "Yes"),
+  smoke = c("No", "Yes")
+)
+
+low_by_smoker_rel_margin1 = prop.table(low_by_smoker, margin=1)
+
+mosaicplot(low_by_smoker_rel_margin1, main = "Low weigth by smoker")
+
+barplot(low_by_smoker_rel_margin1, col=c("red","lightblue"), beside=TRUE, legend.text=c(">= 2.5 kg","< 2.5 kg"), main="Low weigth by smoker")
+```
+
+*Observando el gráfico podemos concluir que el hecho de fumar si influye directamente en el peso de nacimiento del bebé*
+
+### Madres hipertensas
+```{r}
+low_by_hipertension = table(birthwt[c("low","ht")])
+dimnames(low_by_hipertension) = list(
+  low = c("No", "Yes"),
+  ht = c("No", "Yes")
+)
+
+low_by_hipertension_rel_margin1 = prop.table(low_by_hipertension, margin=1)
+
+mosaicplot(low_by_hipertension_rel_margin1, main = "Low weigth by hipertension")
+
+barplot(low_by_hipertension_rel_margin1, col=c("yellow","lightblue"), beside=TRUE, legend.text=c(">= 2.5 kg","< 2.5 kg"), main="Low weigth by hipertension")
+```
+
+*Podemos concluir que la hipertensión si afecta al peso de nacimiento del bebé*
+
+7. Calcula una tabla de frecuencias relativas marginales de las ternas (raza de la madre, madre fumadora o no, peso inferior a 2.5 kg o no) que permita ver si la raza de la madre y su condición de fumadora o no fumadora influyen en el peso del bebé.
+```{r}
+low_by_race_and_smoker = table(birthwt[c("low","race","smoke")])
+dimnames(low_by_race_and_smoker) = list(
+  low = c("No", "Yes"),
+  race = c("white", "black", "other"),
+  smoke = c("No", "Yes")
+)
+
+low_by_race_and_smoker_rel_margin3 = ftable(prop.table(low_by_race_and_smoker, margin=3))
+
+```
+8. Dibuja un diagrama de mosaico de la tabla del ejercicio anterior.
+  ```{r}
+  mosaicplot(low_by_race_and_smoker_rel_margin3, main = "Low weigth by race and smoker")
+  
+  ```
