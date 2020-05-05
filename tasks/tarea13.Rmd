@@ -1,0 +1,76 @@
+---
+title: "Tarea13"
+author: "Carlos Gálvez"
+date: "5/4/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+crabs = read.table("../data/datacrab.txt", header = TRUE)
+str(crabs)
+cw = crabs$width
+
+custom_round = function(x, digits=1){
+  decimal_digits = nchar(strsplit(as.character(x), "\\.")[[1]][2])
+  if(decimal_digits > digits){
+    rounded = ceiling(x*10^digits)*10^-digits
+  } else {
+    rounded = x + 10^-digits
+  }
+  return(rounded)
+}
+
+binrule = c()
+
+binrule$sqrt = function(x){
+  n = length(x)  
+  ceiling(sqrt(n))
+}
+
+binrule$Sturges = function(x){
+  n = length(x)
+  ceiling(1+log(n,2))
+}
+binrule$Scott = function(x){
+  n = length(x)
+  As = 3.5*sd(x)*n^(-1/3) #Amplitud teórica
+  ceiling(diff(range(x))/As)
+}
+
+binrule$FD = function(x){
+  n = length(x)
+  Afd = 2*(quantile(x,0.75, names = FALSE)-quantile(x,0.25,names = FALSE))*n^(-1/3) 
+  ceiling(diff(range(x))/Afd)
+}
+
+binsplit = function(data, rule, digits=1){
+  k = rule(data)
+  A = custom_round(diff(range(data))/k, digits)
+  L1 = min(data)-1/2*10^-digits
+  return(L1 + A*(0:k))
+}
+
+get_class_marks = function(L){
+  (L[1:length(L)-1]+L[2:length(L)])/2
+}
+
+#Scott
+L_by_Scott = binsplit(cw, binrule$Scott)
+class_marks_by_Scott = get_class_marks(L_by_Scott)
+
+#FD
+L_by_FD = binsplit(cw, binrule$FD)
+class_marks_by_FD = get_class_marks(L_by_FD)
+
+#Sturges
+L_by_Sturges = binsplit(cw, binrule$Sturges)
+class_marks_by_Sturges = get_class_marks(L_by_Sturges)
+
+#sqrt
+L_by_sqrt = binsplit(cw, binrule$sqrt)
+class_marks_by_sqrt = get_class_marks(L_by_sqrt)
+```

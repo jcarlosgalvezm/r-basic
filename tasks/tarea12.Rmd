@@ -1,0 +1,91 @@
+---
+title: "Tarea12"
+author: "Carlos Gálvez"
+date: "5/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+grades = read.table("../../r-basic/data/grades.txt")
+str(grades)
+dim(grades)
+head(grades)
+tail(grades)
+```
+
+1. Calcula la media, la mediana y la moda redondeada a dos cifras decimales de las notas numéricas de los exámenes tanto de forma conjunta como por estudio universitario. ¿En qué grupo observamos la nota más alta? ¿Qué grupo está por encima de la media de estudiantes?
+
+```{r echo=FALSE}
+get_mode = function(x) {
+ux <- unique(x)
+ux[which.max(tabulate(match(x, ux)))]
+}
+
+means = aggregate(list(mean=grades$nota), list(grades$estudio), FUN=mean, na.rm=TRUE) 
+medians = aggregate(list(median=grades$nota), list(grades$estudio), FUN=median, na.rm=TRUE)
+mins = aggregate(list(min=grades$nota), list(grades$estudio), FUN=min, na.rm=TRUE)
+maxs = aggregate(list(max=grades$nota), list(grades$estudio), FUN=max, na.rm=TRUE)
+modes = aggregate(list(mode=grades$nota), list(grades$estudio), FUN=get_mode)
+grades_summary = merge(merge(merge(merge(means, medians), mins), maxs), modes)
+grades_summary$median = round(grades_summary$median, 2)
+grades_summary$mean = round(grades_summary$mean, 2)
+grades_summary$max = round(grades_summary$max, 2)
+grades_summary$min = round(grades_summary$min, 2)
+grades_summary$mode = round(grades_summary$mode, 2)
+
+total_mean = round(mean(grades$nota, na.rm=TRUE),2)
+```
+
+Media aritmética: `r total_mean`
+Mediana: `r round(median(grades$nota, na.rm=TRUE),2)`
+Moda: `r round(get_mode(grades$nota), 2)`
+
+```{r}
+grades_summary
+```
+
+```{r echo=FALSE}
+great_values = c(grades_summary$Industrial$Max., grades_summary$Informatica$Max., grades_summary$Mates$Max., grades_summary$Telematica$Max.)
+index = match(max(grades_summary$max), grades_summary$max)
+```
+
+La nota más alta se observa en el grupo de estudiantes de:
+`r grades_summary$Group[index]`
+
+Los grupos que estan por encima de la media son:
+`r grades_summary$Group[c(which(grades_summary$mean > total_mean))]`
+
+2. ¿En qué grupo observamos más variación de notas? Justifica tu respuesta
+```{r echo=FALSE}
+sds = aggregate(list(sd=grades$nota), list(grades$estudio), FUN=sd, na.rm=TRUE)
+```
+
+El grupo en el que hay más variación de notas es el grupo de `r sds$Group.1[which.max(sds$sd)]` ya que es el que tiene mas desviación típica.
+
+3. ¿Hay mucha diferencia entre el grupo que has respondido en el ejercicio 1 y en el ejercicio 2? Intenta dar una explicación objetiva del suceso
+
+En este caso coincide el grupo con mas variación de notas "Mates" esta dentro de los que tiene la media por encima de la media general "Informatica, Mates". El hecho de que la media sea una de las mas altas explica que los datos no estén muy concentrados en la media.
+
+4. Dibuja en un único gráfico los cuatro diagramas de caja, uno para cada grupo. Añade así mismo la nota media, pon nombre, título y color al gráfico para documentar el gráfico correctamente.
+
+```{r}
+boxplot(nota~estudio, data = grades, main = "Notas assignaturas", col=c("red","green","yellow","blue"))
+points(means, col = "black", pch = 15)
+axis(2, at=seq(0, 10, by=0.5) , labels= seq(0, 10, by=0.5))  
+```
+
+5. ¿Observas algunos valores atípicos en el boxplot anterior? ¿A qué grupo pertence?
+
+Llama especialmente la atención el outlier de "Industrial", muy alejado del whisker superior. También llama la atención el whisker inferior de "Informatica" por su reducido tamaño.
+
+6. Indica a partir del boxplot anterior en qué grupo observamos más variedad de notas.
+
+Basandonos en la forma del boxplot, el grupo en el que hay más variedad de notas es "Mates", esto lo podemos afirmar debido a que es el que posee el boxplot con los bigotes mas largos y la caja mas grande, teniendo esta una forma cuadrada con la mediana en el centro de la caja. Esta forma denota que lo valores estan repartidos mas uniformemente por encima y por debajo de la mediana, llegando a los valores mas bajos y mas altos del estudio.
+
+7. En base a todo lo anterior, ¿puedes afirmar de forma estadística que el examen de carrera ha ido mejor en algún estudio que en los demás? 
+
+Si, "Mates" e "Informatica" han ido mejor que el resto
