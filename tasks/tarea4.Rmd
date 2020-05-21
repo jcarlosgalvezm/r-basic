@@ -1,0 +1,215 @@
+---
+title: "Tarea4"
+author: "Carlos Gálvez"
+date: "5/7/2020"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Preguntas
+
+## Pregunta 1
+
+Sean A y B las matricies siguientes:
+\begin{equation}
+\begin{aligned}
+A= \begin{pmatrix}
+1 & 2 & 1 & 4\\
+4 & 3 & 2 & 1\\
+0 & 1 & 0 & 2\\
+3 & 0 & 4 & 0\\
+\end{pmatrix}
+\end{aligned}
+\qquad
+\begin{aligned}
+B= \begin{pmatrix}
+4 & 3 & 2 & 1\\
+0 & 3 & 0 & 4\\
+1 & 2 & 3 & 4\\
+0 & 1 & 0 & 2\\
+\end{pmatrix}
+\end{aligned}
+\end{equation}
+
+Realizaremos las siguientes operaciones:
+\begin{equation}
+A\cdot B 
+\\
+B\cdot A
+\\
+(A\cdot B)^t
+\\
+B^t\cdot A
+\\
+(A\cdot B)^{-1}
+\\
+A^{-1}\cdot B^t
+\end{equation}
+
+Para ello, primero creamos los vectores necesarios para construir una matriz:
+```{r, echo=T} 
+r1A=1:4
+r2A=4:1
+r3A=c(0,1,0,2)
+r4A=c(3,0,4,0)
+
+r1B=4:1
+r2B=c(0,3,0,4)
+r3B=1:4
+r4B=c(0,1,0,2)
+
+```
+
+Luego, construimos a las matrices A y B, respectivamente:
+```{r, echo=T}
+A=rbind(r1A,r2A,r3A,r4A)
+B=rbind(r1B,r2B,r3B,r4B)
+
+```
+Por otro lado, realizamos las operaciones en R:
+```{r, echo=F}
+library(Biodem)
+```
+
+```{r}
+A**B
+B**A
+t(A**B)
+t(B)**A
+mtx.exp(A**B,-1)
+mtx.exp(A,-1)**t(B)
+
+```
+
+Procedemos ahora con los resultados:
+
+\begin{equation}
+A\cdot B = \begin{pmatrix}
+1 & 2 & 1 & 4\\
+4 & 3 & 2 & 1\\
+0 & 1 & 0 & 2\\
+3 & 0 & 4 & 0\\
+\end{pmatrix} \cdot \begin{pmatrix}
+4 & 3 & 2 & 1\\
+0 & 3 & 0 & 4\\
+1 & 2 & 3 & 4\\
+0 & 1 & 0 & 2\\
+\end{pmatrix}
+= \begin{pmatrix}
+1 & 8 & 9 & 4\\
+1 & 27 & 1 & 1\\
+0 & 1 & 0 & 16\\
+1 & 0 & 1 & 0\\
+\end{pmatrix}
+\end{equation}
+
+\begin{equation}
+B\cdot A = \begin{pmatrix}
+4 & 3 & 2 & 1\\
+0 & 3 & 0 & 4\\
+1 & 2 & 3 & 4\\
+0 & 1 & 0 & 2\\
+\end{pmatrix} \cdot \begin{pmatrix}
+1 & 2 & 1 & 4\\
+4 & 3 & 2 & 1\\
+0 & 1 & 0 & 2\\
+3 & 0 & 4 & 0\\
+\end{pmatrix}
+= \begin{pmatrix}
+4 & 9 & 8 & 1\\
+0 & 27 & 0 & 4\\
+1 & 2 & 1 & 16\\
+0 & 1 & 0 & 1\\
+\end{pmatrix}
+
+\end{equation}
+
+
+\begin{equation}
+(A\cdot B)^t = \begin{pmatrix}
+1 & 1 & 0 & 1\\
+8 & 27 & 1 & 0\\
+9 & 1 & 0 & 1\\
+4 & 1 & 16 & 0\\
+\end{pmatrix}
+\end{equation}
+
+\begin{equation}
+B^t\cdot A = \begin{pmatrix}
+4 & 0 & 1 & 0\\
+81 & 27 & 4 & 1\\
+1 & 0 & 1 & 0\\
+1 & 1 & 256 & 1\\
+\end{pmatrix}
+\end{equation}
+
+\begin{equation}
+(A\cdot B)^{-1} = \begin{pmatrix}
+1 & 0 & 0 & 0\\
+0 & 1 & 0 & 0\\
+0 & 0 & 1 & 0\\
+0 & 0 & 0 & 1\\
+\end{pmatrix}
+\end{equation}
+
+\begin{equation}
+A^{-1}\cdot B^t = \begin{pmatrix}
+1 & 1 & 0 & 1\\
+0 & 1 & 0 & 0\\
+0 & 1 & 1 & 1\\
+0 & 0 & 0 & 1\\
+\end{pmatrix}
+\end{equation}
+
+## Pregunta 2
+
+Definiremos el vector _dni_=(4,5,1,7,2,8,3,0)
+```{r}
+dni=c(4,5,1,7,2,8,3,0)
+```
+A este vector aplicaremos las siguientes operaciones:
+```{r}
+dni^2
+```
+
+$$dni^2 = (`r dni^2 `)$$
+```{r}
+sqrt(dni)
+```
+
+$$\sqrt{dni}= (`r sqrt(dni) `) $$
+Finalmente, la suma de las entradas del vector _dni_ es:
+```{r}
+sum(dni)
+```
+$$`r sum(dni) `$$
+
+## Pregunta 3
+Para este ejercicio vamos a considerar un vector _name_, formado a partir de nuestro nombre y apellido. En mi caso es 
+$$name=(C,A,R,L,O,S,G,A,L,V,E,Z).$$
+Para realizar esto en R escrbimos el siguiente código:
+```{r}
+name=unlist(strsplit("CARLOSGALVEZ", ""))
+```
+Una vez definido este vector, haremos un subvector que contenga sólo el nombre. En este caso, sería el vector 
+$$nombre=(C,A,R,L,O,S).$$
+El cual podemos calcularlo con
+```{r}
+nombre=name[1:6]
+```
+De manera análoga, el vector $$ apellido=(G,A,L,V,E,Z)$$ es
+```{r}
+apellido=name[-(1:6)]
+```
+
+Finalmente, para ordenar este último vector usaremos un la función _sort_ y, posteriormente, crearemos una matriz a partir de este vector.
+```{r}
+a=sort(apellido)
+matrix(rbind(a))
+```
